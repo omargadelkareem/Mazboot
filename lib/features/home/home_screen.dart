@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/widgets/brand_logo.dart';
+import '../../core/widgets/category_image.dart';
 import '../../core/widgets/remote_image.dart';
 import '../../core/widgets/section_header.dart';
 import '../../models/service_category.dart';
@@ -360,19 +361,7 @@ class _ServiceCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Container(
-                width: 48,
-                height: 48,
-                decoration: const BoxDecoration(
-                  color: AppColors.primarySoft,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  category.icon,
-                  color: AppColors.primaryDark,
-                  size: 25,
-                ),
-              ),
+              CategoryImage(category: category, size: 54),
               const SizedBox(height: 8),
               Text(
                 category.name,

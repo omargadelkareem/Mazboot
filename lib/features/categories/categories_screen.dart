@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../core/widgets/category_image.dart';
 import '../../models/service_category.dart';
 import '../home/home_cubit.dart';
 
@@ -129,19 +130,7 @@ class _CategoryCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  width: 46,
-                  height: 46,
-                  decoration: BoxDecoration(
-                    color: AppColors.primarySoft,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  child: Icon(
-                    category.icon,
-                    color: AppColors.primaryDark,
-                    size: 25,
-                  ),
-                ),
+                CategoryImage(category: category, size: 58),
                 const Spacer(),
                 const Icon(
                   Icons.arrow_back_ios_new_rounded,
