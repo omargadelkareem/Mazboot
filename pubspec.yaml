@@ -1,0 +1,55 @@
+name: hetta_customer
+description: تطبيق العميل والصنايعي الكامل لمنصة حِتّة لخدمات المنازل في مصر.
+publish_to: "none"
+version: 1.2.0+5
+
+environment:
+  sdk: ">=3.5.0 <4.0.0"
+  flutter: ">=3.24.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  cached_network_image: 3.4.1
+  equatable: 2.0.7
+  firebase_auth: 5.3.1
+  firebase_core: 3.6.0
+  firebase_database: 11.1.4
+  firebase_messaging: 15.1.3
+  flutter_bloc: 8.1.6
+  flutter_local_notifications: 17.2.3
+  geolocator: 12.0.0
+  get_storage: 2.1.1
+  go_router: 14.6.2
+  google_sign_in: 6.2.2
+  image_picker: 1.1.2
+  url_launcher: 6.3.1
+  uuid: 4.5.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: 4.0.0
+
+# إصدارات Android التالية متوافقة مع Flutter 3.24 / Dart 3.5 وcompileSdk 34.
+# تثبيتها يمنع pub من اختيار plugins مخصصة لإصدارات Flutter الأحدث.
+dependency_overrides:
+  geolocator_android: 4.6.1
+  flutter_plugin_android_lifecycle: 2.0.23
+  google_sign_in_android: 6.1.35
+  image_picker_android: 0.8.12+21
+  url_launcher_android: 6.3.14
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Tajawal
+      fonts:
+        - asset: assets/fonts/Tajawal-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Tajawal-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Tajawal-Bold.ttf
+          weight: 700

@@ -1,0 +1,261 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "categories": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com')",
+      ".indexOn": ["sortOrder", "isActive"]
+    },
+    "public_providers": {
+      ".read": true,
+      ".write": "auth != null && (auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com')",
+      ".indexOn": ["categoryId", "approvalStatus", "subscriptionActive", "isActive", "rating"],
+      "$providerId": {
+        ".validate": "newData.child('approvalStatus').val() == 'approved'",
+        "name": {
+          ".write": "auth != null && auth.uid == $providerId && root.child('public_providers').child($providerId).child('approvalStatus').val() == 'approved'",
+          ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 80"
+        },
+        "bio": {
+          ".write": "auth != null && auth.uid == $providerId && root.child('public_providers').child($providerId).child('approvalStatus').val() == 'approved'",
+          ".validate": "newData.isString() && newData.val().length >= 10 && newData.val().length <= 600"
+        },
+        "experienceYears": {
+          ".write": "auth != null && auth.uid == $providerId && root.child('public_providers').child($providerId).child('approvalStatus').val() == 'approved'",
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 70"
+        },
+        "services": {
+          ".write": "auth != null && auth.uid == $providerId && root.child('public_providers').child($providerId).child('approvalStatus').val() == 'approved'",
+          ".validate": "newData.hasChildren() && newData.numChildren() <= 12",
+          "$serviceId": {
+            ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 60"
+          }
+        },
+        "isAvailable": {
+          ".write": "auth != null && auth.uid == $providerId && root.child('public_providers').child($providerId).child('approvalStatus').val() == 'approved' && root.child('public_providers').child($providerId).child('subscriptionActive').val() == true && root.child('public_providers').child($providerId).child('isActive').val() == true",
+          ".validate": "newData.isBoolean()"
+        }
+      }
+    },
+    "provider_applications": {
+      ".read": "auth != null && (auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com')",
+      ".indexOn": ["status", "categoryId", "governorate", "submittedAt"],
+      "$uid": {
+        ".read": "auth != null && (auth.uid == $uid || (auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || (auth.token.email_verified == true && data.child('migrationTargetEmail').val() == auth.token.email))",
+        ".write": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || (auth.uid == $uid && !data.exists() && newData.child('applicantUid').val() == auth.uid && newData.child('status').val() == 'pending' && newData.child('subscriptionActive').val() == false && newData.child('published').val() == false && newData.child('monthlySubscriptionAmount').val() == 50) || (data.exists() && !newData.exists() && auth.token.email_verified == true && data.child('migrationTargetEmail').val() == auth.token.email))",
+        ".validate": "newData.hasChildren(['applicantUid', 'name', 'phone', 'categoryId', 'governorate', 'area', 'photoBase64', 'submittedAt', 'status', 'subscriptionActive', 'monthlySubscriptionAmount', 'published'])",
+        "applicantUid": {
+          ".validate": "newData.isString() && newData.val() == $uid"
+        },
+        "name": {
+          ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 100"
+        },
+        "phone": {
+          ".validate": "newData.isString() && newData.val().matches(/^\\+201[0125][0-9]{8}$/)"
+        },
+        "categoryId": {
+          ".validate": "newData.isString() && root.child('categories').child(newData.val()).exists()"
+        },
+        "governorate": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 60"
+        },
+        "area": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 100"
+        },
+        "photoBase64": {
+          ".validate": "newData.isString() && newData.val().length >= 100 && newData.val().length <= 1250000"
+        },
+        "submittedAt": {
+          ".validate": "newData.isNumber() && (!data.exists() || newData.val() == data.val())"
+        },
+        "status": {
+          ".validate": "newData.isString() && newData.val().matches(/^(pending|approved|rejected)$/)"
+        },
+        "reviewNote": {
+          ".validate": "newData.isString() && newData.val().length <= 500"
+        },
+        "subscriptionActive": {
+          ".validate": "newData.isBoolean()"
+        },
+        "monthlySubscriptionAmount": {
+          ".validate": "newData.isNumber() && newData.val() == 50"
+        },
+        "published": {
+          ".validate": "newData.isBoolean()"
+        },
+        "subscriptionStartedAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "subscriptionExpiresAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "lastPaymentAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "migrationTargetEmail": {
+          ".write": "auth != null && auth.uid == $uid && root.child('provider_applications').child($uid).child('status').val() == 'pending'",
+          ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 254"
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "users": {
+      ".read": "auth != null && (auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com')",
+      "$uid": {
+        ".read": "auth != null && (auth.uid == $uid || (auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com'))",
+        ".write": "auth != null && (auth.uid == $uid || (auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com'))",
+        ".validate": "newData.hasChildren(['name', 'phone', 'governorate', 'area', 'createdAt'])",
+        "name": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 80"
+        },
+        "phone": {
+          ".validate": "newData.isString() && newData.val().length <= 20 && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || auth.token.phone_number == null || newData.val() == auth.token.phone_number)"
+        },
+        "email": {
+          ".validate": "newData.isString() && newData.val().length <= 150"
+        },
+        "avatarUrl": {
+          ".validate": "newData.isString() && newData.val().length <= 1000"
+        },
+        "governorate": {
+          ".validate": "newData.isString() && newData.val().length <= 60"
+        },
+        "area": {
+          ".validate": "newData.isString() && newData.val().length <= 100"
+        },
+        "avatarBase64": {
+          ".validate": "newData.isString() && newData.val().length <= 1250000"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber() && (!data.exists() || newData.val() == data.val())"
+        },
+        "fcmToken": {
+          ".validate": "newData.isString() && newData.val().length <= 500"
+        },
+        "addresses": {
+          "$addressId": {
+            ".validate": "newData.hasChildren(['label', 'details', 'governorate', 'area', 'isDefault'])",
+            "label": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 50"
+            },
+            "details": {
+              ".validate": "newData.isString() && newData.val().length >= 5 && newData.val().length <= 500"
+            },
+            "governorate": {
+              ".validate": "newData.isString() && newData.val().length <= 60"
+            },
+            "area": {
+              ".validate": "newData.isString() && newData.val().length <= 100"
+            },
+            "latitude": {
+              ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90"
+            },
+            "longitude": {
+              ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180"
+            },
+            "isDefault": {
+              ".validate": "newData.isBoolean()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        },
+        "$other": {
+          ".validate": false
+        }
+      }
+    },
+    "favorites": {
+      "$uid": {
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid",
+        "$providerId": {
+          ".validate": "root.child('public_providers').child($providerId).exists() && newData.hasChildren(['active', 'createdAt']) && newData.child('active').val() == true && newData.child('createdAt').isNumber()"
+        }
+      }
+    },
+    "orders": {
+      ".read": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || (query.orderByChild == 'customerId' && query.equalTo == auth.uid) || (query.orderByChild == 'technicianId' && query.equalTo == auth.uid))",
+      ".indexOn": ["customerId", "technicianId", "categoryId", "status", "createdAt"],
+      "$orderId": {
+        ".read": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || data.child('customerId').val() == auth.uid || data.child('technicianId').val() == auth.uid)",
+        ".write": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || (!data.exists() && newData.child('customerId').val() == auth.uid && newData.child('status').val() == 'sent' && newData.child('categoryId').val() == root.child('public_providers').child(newData.child('technicianId').val()).child('categoryId').val() && root.child('public_providers').child(newData.child('technicianId').val()).child('approvalStatus').val() == 'approved' && root.child('public_providers').child(newData.child('technicianId').val()).child('subscriptionActive').val() == true && root.child('public_providers').child(newData.child('technicianId').val()).child('isActive').val() == true && root.child('public_providers').child(newData.child('technicianId').val()).child('isAvailable').val() == true) || (data.exists() && data.child('technicianId').val() == auth.uid && newData.child('customerId').val() == data.child('customerId').val() && newData.child('technicianId').val() == data.child('technicianId').val() && newData.child('categoryId').val() == data.child('categoryId').val() && newData.child('problem').val() == data.child('problem').val() && newData.child('address').val() == data.child('address').val() && newData.child('date').val() == data.child('date').val() && newData.child('time').val() == data.child('time').val() && newData.child('visitFee').val() == data.child('visitFee').val() && newData.child('createdAt').val() == data.child('createdAt').val() && newData.child('problemImageBase64').val() == data.child('problemImageBase64').val() && ((data.child('status').val() == 'sent' && (newData.child('status').val() == 'accepted' || newData.child('status').val() == 'cancelled')) || (data.child('status').val() == 'accepted' && (newData.child('status').val() == 'onTheWay' || newData.child('status').val() == 'cancelled')) || (data.child('status').val() == 'onTheWay' && (newData.child('status').val() == 'inProgress' || newData.child('status').val() == 'cancelled')) || (data.child('status').val() == 'inProgress' && newData.child('status').val() == 'completed') || newData.child('status').val() == data.child('status').val())))",
+        ".validate": "newData.hasChildren(['technicianId', 'categoryId', 'customerId', 'problem', 'address', 'date', 'time', 'status', 'createdAt', 'updatedAt']) && newData.child('problem').isString() && newData.child('problem').val().length >= 8 && newData.child('problem').val().length <= 800 && newData.child('address').isString() && newData.child('address').val().length >= 5 && newData.child('address').val().length <= 500 && (!newData.child('visitFee').exists() || (newData.child('visitFee').isNumber() && newData.child('visitFee').val() == 0)) && newData.child('status').val().matches(/^(sent|accepted|onTheWay|inProgress|completed|cancelled)$/) && newData.child('createdAt').isNumber() && newData.child('updatedAt').isNumber() && (!newData.child('problemImageBase64').exists() || (newData.child('problemImageBase64').isString() && newData.child('problemImageBase64').val().length <= 1250000))"
+      }
+    },
+    "order_actions": {
+      "$orderId": {
+        "cancellationRequests": {
+          "$uid": {
+            ".read": "auth != null && (auth.uid == $uid || (auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || root.child('orders').child($orderId).child('technicianId').val() == auth.uid)",
+            ".write": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || (auth.uid == $uid && !data.exists() && root.child('orders').child($orderId).child('customerId').val() == auth.uid && (root.child('orders').child($orderId).child('status').val() == 'sent' || root.child('orders').child($orderId).child('status').val() == 'accepted')))",
+            ".validate": "newData.hasChildren(['reason', 'createdAt', 'status']) && newData.child('reason').isString() && newData.child('reason').val().length >= 3 && newData.child('reason').val().length <= 300 && newData.child('createdAt').isNumber() && newData.child('status').val().matches(/^(pending|approved|rejected)$/)"
+          }
+        }
+      }
+    },
+    "chats": {
+      ".read": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || (query.orderByChild == 'customerId' && query.equalTo == auth.uid) || (query.orderByChild == 'technicianId' && query.equalTo == auth.uid))",
+      ".indexOn": ["customerId", "technicianId", "lastMessageAt"],
+      "$chatId": {
+        ".read": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || data.child('customerId').val() == auth.uid || data.child('technicianId').val() == auth.uid)",
+        "customerId": {
+          ".write": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || (!data.exists() && newData.val() == auth.uid && root.child('orders').child($chatId).child('customerId').val() == auth.uid))",
+          ".validate": "newData.isString()"
+        },
+        "technicianId": {
+          ".write": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || (!data.exists() && root.child('orders').child($chatId).child('customerId').val() == auth.uid && newData.val() == root.child('orders').child($chatId).child('technicianId').val()))",
+          ".validate": "newData.isString()"
+        },
+        "orderId": {
+          ".write": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || (!data.exists() && root.child('orders').child($chatId).child('customerId').val() == auth.uid && newData.val() == $chatId))",
+          ".validate": "newData.val() == $chatId"
+        },
+        "messages": {
+          "$messageId": {
+            ".write": "auth != null && !data.exists() && (root.child('chats').child($chatId).child('customerId').val() == auth.uid || root.child('chats').child($chatId).child('technicianId').val() == auth.uid || (auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com')) && newData.child('senderId').val() == auth.uid",
+            ".validate": "newData.hasChildren(['senderId', 'text', 'sentAt', 'seen']) && newData.child('senderId').isString() && newData.child('text').isString() && newData.child('text').val().length <= 2000 && newData.child('sentAt').isNumber() && newData.child('seen').isBoolean() && (newData.child('text').val().length > 0 || newData.child('imageBase64').exists()) && (!newData.child('imageBase64').exists() || (newData.child('imageBase64').isString() && newData.child('imageBase64').val().length <= 1250000))"
+          }
+        },
+        "lastMessage": {
+          ".write": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || root.child('chats').child($chatId).child('customerId').val() == auth.uid || root.child('chats').child($chatId).child('technicianId').val() == auth.uid || (!data.exists() && root.child('orders').child($chatId).child('customerId').val() == auth.uid))",
+          ".validate": "newData.isString() && newData.val().length <= 2000"
+        },
+        "lastMessageAt": {
+          ".write": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || root.child('chats').child($chatId).child('customerId').val() == auth.uid || root.child('chats').child($chatId).child('technicianId').val() == auth.uid || (!data.exists() && root.child('orders').child($chatId).child('customerId').val() == auth.uid))",
+          ".validate": "newData.isNumber()"
+        },
+        "customerUnreadCount": {
+          ".write": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || root.child('chats').child($chatId).child('customerId').val() == auth.uid || root.child('chats').child($chatId).child('technicianId').val() == auth.uid || (!data.exists() && root.child('orders').child($chatId).child('customerId').val() == auth.uid))",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "technicianUnreadCount": {
+          ".write": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || root.child('chats').child($chatId).child('customerId').val() == auth.uid || root.child('chats').child($chatId).child('technicianId').val() == auth.uid || (!data.exists() && root.child('orders').child($chatId).child('customerId').val() == auth.uid))",
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        }
+      }
+    },
+    "reviews": {
+      ".read": true,
+      "$providerId": {
+        "$reviewId": {
+          ".write": "auth != null && !data.exists() && $reviewId == newData.child('orderId').val() && newData.child('customerId').val() == auth.uid && root.child('orders').child(newData.child('orderId').val()).child('customerId').val() == auth.uid && root.child('orders').child(newData.child('orderId').val()).child('technicianId').val() == $providerId && root.child('orders').child(newData.child('orderId').val()).child('status').val() == 'completed'",
+          ".validate": "newData.hasChildren(['orderId', 'customerId', 'customerName', 'rating', 'comment', 'createdAt']) && newData.child('rating').isNumber() && newData.child('rating').val() >= 1 && newData.child('rating').val() <= 5 && newData.child('comment').isString() && newData.child('comment').val().length <= 1000 && newData.child('createdAt').isNumber()"
+        }
+      }
+    },
+    "notifications": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid == $uid || (auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com'))",
+        "$notificationId": {
+          ".write": "auth != null && ((auth.token.role == 'admin' || auth.token.email == 'admin@hetta.com') || (auth.uid == $uid && data.exists() && newData.exists() && newData.child('title').val() == data.child('title').val() && newData.child('body').val() == data.child('body').val() && newData.child('createdAt').val() == data.child('createdAt').val() && newData.child('orderId').val() == data.child('orderId').val() && newData.child('isRead').val() == true))",
+          ".validate": "newData.hasChildren(['title', 'body', 'createdAt', 'isRead']) && newData.child('title').isString() && newData.child('title').val().length <= 120 && newData.child('body').isString() && newData.child('body').val().length <= 500 && newData.child('createdAt').isNumber() && newData.child('isRead').isBoolean()"
+        }
+      }
+    }
+  }
+}

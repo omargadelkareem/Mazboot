@@ -1,0 +1,551 @@
+import 'package:flutter/material.dart';
+
+import '../core/theme/app_colors.dart';
+import '../models/conversation.dart';
+import '../models/service_category.dart';
+import '../models/service_order.dart';
+import '../models/technician.dart';
+
+abstract final class DemoData {
+  static const categories = <ServiceCategory>[
+    ServiceCategory(
+      id: 'electricity',
+      name: 'كهرباء',
+      subtitle: 'أعطال وتركيبات',
+      icon: Icons.bolt_rounded,
+      backgroundColor: AppColors.navy,
+      roomIds: ['living', 'kitchen', 'bathroom'],
+    ),
+    ServiceCategory(
+      id: 'plumbing',
+      name: 'سباكة',
+      subtitle: 'تسريب وصيانة',
+      icon: Icons.plumbing_rounded,
+      backgroundColor: AppColors.powderBlue,
+      roomIds: ['bathroom', 'kitchen'],
+    ),
+    ServiceCategory(
+      id: 'ac',
+      name: 'تكييف',
+      subtitle: 'صيانة وتركيب',
+      icon: Icons.ac_unit_rounded,
+      backgroundColor: AppColors.powderBlue,
+      roomIds: ['living', 'appliances'],
+    ),
+    ServiceCategory(
+      id: 'carpentry',
+      name: 'نجارة',
+      subtitle: 'أثاث وأبواب',
+      icon: Icons.carpenter_rounded,
+      backgroundColor: AppColors.powderPeach,
+      roomIds: ['living', 'kitchen'],
+    ),
+    ServiceCategory(
+      id: 'painting',
+      name: 'دهانات',
+      subtitle: 'نقاشة وتشطيب',
+      icon: Icons.format_paint_rounded,
+      backgroundColor: AppColors.powderPurple,
+      roomIds: ['living'],
+    ),
+    ServiceCategory(
+      id: 'cleaning',
+      name: 'تنظيف',
+      subtitle: 'منزل ومفروشات',
+      icon: Icons.cleaning_services_rounded,
+      backgroundColor: AppColors.powderGreen,
+      roomIds: ['living', 'kitchen', 'bathroom'],
+    ),
+    ServiceCategory(
+      id: 'appliances',
+      name: 'أجهزة منزلية',
+      subtitle: 'غسالات وثلاجات',
+      icon: Icons.home_repair_service_rounded,
+      backgroundColor: AppColors.powderPeach,
+      roomIds: ['appliances', 'kitchen'],
+    ),
+    ServiceCategory(
+      id: 'satellite',
+      name: 'دش وستالايت',
+      subtitle: 'تركيب وضبط',
+      icon: Icons.satellite_alt_rounded,
+      backgroundColor: AppColors.powderPurple,
+      roomIds: ['living', 'appliances'],
+    ),
+    ServiceCategory(
+      id: 'aluminum',
+      name: 'ألوميتال',
+      subtitle: 'شبابيك ومطابخ',
+      icon: Icons.window_rounded,
+      backgroundColor: AppColors.powderBlue,
+      roomIds: ['living', 'kitchen'],
+    ),
+    ServiceCategory(
+      id: 'gypsum',
+      name: 'جبس بورد',
+      subtitle: 'أسقف وديكورات',
+      icon: Icons.dashboard_customize_rounded,
+      backgroundColor: AppColors.powderGreen,
+      roomIds: ['living'],
+    ),
+    ServiceCategory(
+      id: 'pest',
+      name: 'مكافحة حشرات',
+      subtitle: 'رش وتعقيم',
+      icon: Icons.pest_control_rounded,
+      backgroundColor: AppColors.powderPeach,
+      roomIds: ['living', 'kitchen', 'bathroom'],
+    ),
+    ServiceCategory(
+      id: 'moving',
+      name: 'نقل أثاث',
+      subtitle: 'فك ونقل وتركيب',
+      icon: Icons.local_shipping_outlined,
+      backgroundColor: AppColors.powderBlue,
+      roomIds: ['living'],
+    ),
+    ServiceCategory(
+      id: 'locksmith',
+      name: 'مفاتيح وأقفال',
+      subtitle: 'فتح وتركيب',
+      icon: Icons.key_rounded,
+      backgroundColor: AppColors.powderPurple,
+      roomIds: ['living'],
+    ),
+    ServiceCategory(
+      id: 'security',
+      name: 'كاميرات مراقبة',
+      subtitle: 'تركيب وصيانة',
+      icon: Icons.videocam_outlined,
+      backgroundColor: AppColors.powderGreen,
+      roomIds: ['living', 'appliances'],
+    ),
+  ];
+
+  static const technicians = <Technician>[
+    Technician(
+      id: 'mohamed-ali',
+      name: 'محمد علي',
+      categoryId: 'electricity',
+      profession: 'كهربائي منازل',
+      imageUrl:
+          'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=700&q=85',
+      rating: 4.8,
+      reviewsCount: 120,
+      completedJobs: 320,
+      distanceKm: 0.8,
+      visitFee: 0,
+      isAvailable: true,
+      isVerified: true,
+      experienceYears: 6,
+      bio:
+          'كهربائي معتمد بخبرة أكثر من 6 سنوات في تنفيذ وصيانة جميع أعمال الكهرباء المنزلية والتجارية، بجودة عالية والتزام بالمواعيد.',
+      services: ['أعطال الكهرباء', 'تركيب إنارة', 'لوحات توزيع', 'تأسيس كامل'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=900&q=80',
+        'https://images.unsplash.com/photo-1555963966-b7ae5404b6ed?auto=format&fit=crop&w=900&q=80',
+        'https://images.unsplash.com/photo-1565608438257-fac3c27beb36?auto=format&fit=crop&w=900&q=80',
+        'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'ahmed-gamal',
+      name: 'أحمد جمال',
+      categoryId: 'plumbing',
+      profession: 'سباك محترف',
+      imageUrl:
+          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=700&q=85',
+      rating: 4.7,
+      reviewsCount: 98,
+      completedJobs: 250,
+      distanceKm: 1.2,
+      visitFee: 0,
+      isAvailable: true,
+      isVerified: true,
+      experienceYears: 8,
+      bio:
+          'متخصص في اكتشاف التسريبات وصيانة شبكات المياه وتركيب الأدوات الصحية بأحدث المعدات.',
+      services: ['كشف تسريب', 'تسليك صرف', 'تركيب خلاطات', 'تأسيس سباكة'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?auto=format&fit=crop&w=900&q=80',
+        'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'karim-hassan',
+      name: 'كريم حسن',
+      categoryId: 'electricity',
+      profession: 'كهربائي وتشطيبات',
+      imageUrl:
+          'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=700&q=85',
+      rating: 4.7,
+      reviewsCount: 88,
+      completedJobs: 215,
+      distanceKm: 1.1,
+      visitFee: 0,
+      isAvailable: true,
+      isVerified: true,
+      experienceYears: 5,
+      bio:
+          'متخصص في تأسيس وتشطيب الكهرباء المنزلية وتركيب وحدات الإضاءة الحديثة.',
+      services: ['تأسيس كهرباء', 'تركيب نجف', 'صيانة أعطال', 'لوحات توزيع'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1565608438257-fac3c27beb36?auto=format&fit=crop&w=900&q=80',
+        'https://images.unsplash.com/photo-1555963966-b7ae5404b6ed?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'ali-mahmoud',
+      name: 'علي محمود',
+      categoryId: 'electricity',
+      profession: 'فني كهرباء',
+      imageUrl:
+          'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=700&q=85',
+      rating: 4.9,
+      reviewsCount: 142,
+      completedJobs: 365,
+      distanceKm: 1.7,
+      visitFee: 0,
+      isAvailable: false,
+      isVerified: true,
+      experienceYears: 11,
+      bio:
+          'خبرة في صيانة الأعطال المعقدة وتنفيذ شبكات الكهرباء للمنازل والمحلات.',
+      services: ['كشف أعطال', 'تأسيس كامل', 'صيانة لوحات', 'تركيب مفاتيح'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=900&q=80',
+        'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'mostafa-salah',
+      name: 'مصطفى صلاح',
+      categoryId: 'ac',
+      profession: 'فني تكييف وتبريد',
+      imageUrl:
+          'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=700&q=85',
+      rating: 4.9,
+      reviewsCount: 156,
+      completedJobs: 410,
+      distanceKm: 1.5,
+      visitFee: 0,
+      isAvailable: false,
+      isVerified: true,
+      experienceYears: 10,
+      bio:
+          'فني تكييف متخصص في الصيانة والتركيب والشحن لجميع الماركات مع ضمان على الخدمة.',
+      services: ['صيانة تكييف', 'شحن فريون', 'تركيب ونقل', 'تنظيف دوري'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1631545806609-7b32b0f9c84a?auto=format&fit=crop&w=900&q=80',
+        'https://images.unsplash.com/photo-1621905251918-48416bd8575a?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'yasser-mahmoud',
+      name: 'ياسر محمود',
+      categoryId: 'carpentry',
+      profession: 'نجار أثاث',
+      imageUrl:
+          'https://images.unsplash.com/photo-1531384441138-2736e62e0919?auto=format&fit=crop&w=700&q=85',
+      rating: 4.6,
+      reviewsCount: 84,
+      completedJobs: 190,
+      distanceKm: 2.1,
+      visitFee: 0,
+      isAvailable: true,
+      isVerified: true,
+      experienceYears: 9,
+      bio: 'تنفيذ وصيانة الأثاث والأبواب والمطابخ بجودة تشطيب عالية.',
+      services: ['تصليح أثاث', 'تركيب أبواب', 'مطابخ', 'أعمال خشب'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=900&q=80',
+        'https://images.unsplash.com/photo-1531835551805-16d864c8d311?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'hassan-sayed',
+      name: 'حسن سيد',
+      categoryId: 'painting',
+      profession: 'نقاش ودهانات',
+      imageUrl:
+          'https://images.unsplash.com/photo-1540569014015-19a7be504e3a?auto=format&fit=crop&w=700&q=85',
+      rating: 4.8,
+      reviewsCount: 76,
+      completedJobs: 164,
+      distanceKm: 2.0,
+      visitFee: 0,
+      isAvailable: true,
+      isVerified: true,
+      experienceYears: 7,
+      bio:
+          'تنفيذ الدهانات والديكورات الحديثة وتشطيب الشقق بألوان وخامات عالية الجودة.',
+      services: ['دهانات داخلية', 'واجهات', 'ديكورات', 'معالجة رطوبة'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=900&q=80',
+        'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'mahmoud-saber',
+      name: 'محمود صابر',
+      categoryId: 'cleaning',
+      profession: 'تنظيف منازل',
+      imageUrl:
+          'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?auto=format&fit=crop&w=700&q=85',
+      rating: 4.6,
+      reviewsCount: 61,
+      completedJobs: 142,
+      distanceKm: 2.4,
+      visitFee: 0,
+      isAvailable: true,
+      isVerified: true,
+      experienceYears: 4,
+      bio:
+          'خدمات تنظيف عميق للمنازل والمفروشات وما بعد التشطيب بمعدات احترافية.',
+      services: ['تنظيف عميق', 'مفروشات', 'بعد التشطيب', 'تعقيم'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80',
+        'https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'ramy-fawzy',
+      name: 'رامي فوزي',
+      categoryId: 'appliances',
+      profession: 'فني أجهزة منزلية',
+      imageUrl:
+          'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=700&q=85',
+      rating: 4.8,
+      reviewsCount: 92,
+      completedJobs: 276,
+      distanceKm: 1.6,
+      visitFee: 0,
+      isAvailable: true,
+      isVerified: true,
+      experienceYears: 8,
+      bio:
+          'صيانة الغسالات والثلاجات والبوتاجازات لمعظم الماركات مع ضمان على الإصلاح.',
+      services: ['غسالات', 'ثلاجات', 'بوتاجازات', 'سخانات'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80',
+        'https://images.unsplash.com/photo-1555963966-b7ae5404b6ed?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'sayed-nabil',
+      name: 'سيد نبيل',
+      categoryId: 'satellite',
+      profession: 'فني دش وستالايت',
+      imageUrl:
+          'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=700&q=85',
+      rating: 4.7,
+      reviewsCount: 73,
+      completedJobs: 205,
+      distanceKm: 2.2,
+      visitFee: 0,
+      isAvailable: true,
+      isVerified: true,
+      experienceYears: 7,
+      bio: 'تركيب وضبط أطباق الدش والريسيفر وتمديد الكابلات وحل مشاكل الإشارة.',
+      services: ['تركيب طبق', 'ضبط إشارة', 'تمديد كابلات', 'برمجة ريسيفر'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'ashraf-kamal',
+      name: 'أشرف كمال',
+      categoryId: 'aluminum',
+      profession: 'فني ألوميتال',
+      imageUrl:
+          'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=700&q=85',
+      rating: 4.8,
+      reviewsCount: 68,
+      completedJobs: 184,
+      distanceKm: 2.5,
+      visitFee: 0,
+      isAvailable: false,
+      isVerified: true,
+      experienceYears: 12,
+      bio:
+          'تصنيع وصيانة شبابيك وأبواب ومطابخ الألوميتال بمقاسات وتشطيبات دقيقة.',
+      services: ['شبابيك', 'أبواب', 'مطابخ', 'صيانة مفصلات'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'wael-samy',
+      name: 'وائل سامي',
+      categoryId: 'gypsum',
+      profession: 'فني جبس بورد',
+      imageUrl:
+          'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=700&q=85',
+      rating: 4.9,
+      reviewsCount: 81,
+      completedJobs: 193,
+      distanceKm: 2.8,
+      visitFee: 0,
+      isAvailable: true,
+      isVerified: true,
+      experienceYears: 10,
+      bio:
+          'تنفيذ الأسقف المعلقة وديكورات الجبس بورد الحديثة وتجهيز الإضاءة المخفية.',
+      services: ['أسقف معلقة', 'مكتبات', 'إضاءة مخفية', 'صيانة شروخ'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80',
+        'https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'tarek-reda',
+      name: 'طارق رضا',
+      categoryId: 'pest',
+      profession: 'مكافحة حشرات',
+      imageUrl:
+          'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=700&q=85',
+      rating: 4.7,
+      reviewsCount: 59,
+      completedJobs: 151,
+      distanceKm: 3.0,
+      visitFee: 0,
+      isAvailable: true,
+      isVerified: true,
+      experienceYears: 6,
+      bio: 'مكافحة الحشرات والقوارض بمواد آمنة وخطة متابعة مناسبة للمنزل.',
+      services: ['رش حشرات', 'مكافحة قوارض', 'تعقيم', 'متابعة دورية'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'hany-adel',
+      name: 'هاني عادل',
+      categoryId: 'moving',
+      profession: 'نقل وفك أثاث',
+      imageUrl:
+          'https://images.unsplash.com/photo-1531384441138-2736e62e0919?auto=format&fit=crop&w=700&q=85',
+      rating: 4.6,
+      reviewsCount: 64,
+      completedJobs: 173,
+      distanceKm: 3.3,
+      visitFee: 0,
+      isAvailable: true,
+      isVerified: true,
+      experienceYears: 9,
+      bio: 'فك وتغليف ونقل وتركيب الأثاث بعناية داخل المحافظة وبين المحافظات.',
+      services: ['فك وتركيب', 'تغليف', 'نقل أثاث', 'ونش رفع'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'adel-shawky',
+      name: 'عادل شوقي',
+      categoryId: 'locksmith',
+      profession: 'فني مفاتيح وأقفال',
+      imageUrl:
+          'https://images.unsplash.com/photo-1540569014015-19a7be504e3a?auto=format&fit=crop&w=700&q=85',
+      rating: 4.8,
+      reviewsCount: 88,
+      completedJobs: 244,
+      distanceKm: 1.9,
+      visitFee: 0,
+      isAvailable: true,
+      isVerified: true,
+      experienceYears: 11,
+      bio: 'فتح الأبواب وتركيب وصيانة الأقفال والمفاتيح العادية والمصفحة.',
+      services: ['فتح أبواب', 'تغيير كالون', 'مفاتيح مصفحة', 'صيانة أقفال'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+    Technician(
+      id: 'essam-badry',
+      name: 'عصام بدري',
+      categoryId: 'security',
+      profession: 'فني كاميرات مراقبة',
+      imageUrl:
+          'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?auto=format&fit=crop&w=700&q=85',
+      rating: 4.9,
+      reviewsCount: 102,
+      completedJobs: 289,
+      distanceKm: 2.6,
+      visitFee: 0,
+      isAvailable: false,
+      isVerified: true,
+      experienceYears: 9,
+      bio:
+          'تركيب كاميرات المراقبة والإنتركم وضبط المشاهدة عن بُعد للمنازل والمحلات.',
+      services: ['كاميرات IP', 'DVR', 'إنتركم', 'مشاهدة عن بعد'],
+      portfolioUrls: [
+        'https://images.unsplash.com/photo-1555963966-b7ae5404b6ed?auto=format&fit=crop&w=900&q=80',
+      ],
+    ),
+  ];
+
+  static const orders = <ServiceOrder>[
+    ServiceOrder(
+      id: 'REQ-250524-9876',
+      technicianId: 'mohamed-ali',
+      categoryId: 'electricity',
+      problem: 'فصل متكرر في الكهرباء داخل المطبخ.',
+      address: 'شارع الجمهورية، حي شرق، سوهاج',
+      date: 'السبت، 24 أغسطس',
+      time: '10:00 ص - 1:00 م',
+      visitFee: 0,
+      status: ServiceOrderStatus.onTheWay,
+    ),
+    ServiceOrder(
+      id: 'REQ-250525-4281',
+      technicianId: 'ahmed-gamal',
+      categoryId: 'plumbing',
+      problem: 'تسريب مياه أسفل حوض الحمام.',
+      address: 'شارع النيل، سوهاج',
+      date: 'الأحد، 25 أغسطس',
+      time: '11:00 ص - 2:00 م',
+      visitFee: 0,
+      status: ServiceOrderStatus.accepted,
+    ),
+    ServiceOrder(
+      id: 'REQ-250420-1190',
+      technicianId: 'mostafa-salah',
+      categoryId: 'ac',
+      problem: 'تنظيف وصيانة دورية للتكييف.',
+      address: 'حي الكوثر، سوهاج',
+      date: '20 يوليو',
+      time: '5:00 م',
+      visitFee: 0,
+      status: ServiceOrderStatus.completed,
+    ),
+  ];
+
+  static const conversations = <Conversation>[
+    Conversation(
+      technicianId: 'mohamed-ali',
+      lastMessage: 'أنا في الطريق وحوصل لحضرتك خلال 18 دقيقة.',
+      time: '9:42 ص',
+      unreadCount: 2,
+    ),
+    Conversation(
+      technicianId: 'ahmed-gamal',
+      lastMessage: 'تمام يا فندم، تم تأكيد الموعد.',
+      time: 'أمس',
+      unreadCount: 0,
+    ),
+  ];
+
+  static ServiceCategory categoryById(String id) {
+    return categories.firstWhere(
+      (category) => category.id == id,
+      orElse: () => categories.first,
+    );
+  }
+
+  static Technician technicianById(String id) {
+    return technicians.firstWhere(
+      (technician) => technician.id == id,
+      orElse: () => technicians.first,
+    );
+  }
+}
