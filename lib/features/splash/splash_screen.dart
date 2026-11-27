@@ -55,24 +55,48 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
+                  PositionedDirectional(
+                    top: -90,
+                    end: -95,
+                    child: Container(
+                      width: 250,
+                      height: 250,
+                      decoration: const BoxDecoration(
+                        color: AppColors.primarySoft,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                  PositionedDirectional(
+                    bottom: -120,
+                    start: -120,
+                    child: Container(
+                      width: 280,
+                      height: 280,
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.07),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
                   const Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        BrandLogo(markSize: 110),
+                        BrandLogo(markSize: 104),
                         SizedBox(height: 28),
                         Text(
                           AppConstants.tagline,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            color: AppColors.navy,
+                            color: AppColors.primaryDark,
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
                         SizedBox(height: 10),
-                        _OrangeDivider(),
+                        _AccentDivider(),
                       ],
                     ),
                   ),
@@ -87,7 +111,7 @@ class _SplashScreenState extends State<SplashScreen> {
                           width: 25,
                           height: 25,
                           child: CircularProgressIndicator(
-                            color: AppColors.orange,
+                            color: AppColors.primary,
                             strokeWidth: 2.5,
                           ),
                         ),
@@ -113,8 +137,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 }
 
-class _OrangeDivider extends StatelessWidget {
-  const _OrangeDivider();
+class _AccentDivider extends StatelessWidget {
+  const _AccentDivider();
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +146,7 @@ class _OrangeDivider extends StatelessWidget {
       width: 84,
       height: 3,
       decoration: BoxDecoration(
-        color: AppColors.orange,
+        color: AppColors.primary,
         borderRadius: BorderRadius.circular(8),
       ),
     );

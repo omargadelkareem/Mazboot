@@ -80,7 +80,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                     ),
                     const SizedBox(height: 30),
                     Text(
-                      codeSent ? 'اكتب رمز التحقق' : 'أهلًا بيك في Mazboot',
+                      codeSent ? 'اكتب رمز التحقق' : 'أهلًا بيك في مظبوط',
                       style: Theme.of(context).textTheme.displaySmall,
                     ),
                     const SizedBox(height: 9),

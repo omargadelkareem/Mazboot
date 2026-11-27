@@ -28,7 +28,7 @@ class ProfileScreen extends StatelessWidget {
     }
     final name = profile?.name.trim().isNotEmpty == true
         ? profile!.name
-        : 'عميل Mazboot';
+        : 'عميل مظبوط';
     return SafeArea(
       bottom: false,
       child: ListView(
@@ -226,11 +226,11 @@ class ProfileScreen extends StatelessWidget {
               ),
               _MenuTile(
                 icon: Icons.info_outline_rounded,
-                title: 'عن Mazboot',
+                title: 'عن مظبوط',
                 subtitle: 'الإصدار 1.2.0',
                 onTap: () => showAboutDialog(
                   context: context,
-                  applicationName: 'Mazboot',
+                  applicationName: 'مظبوط',
                   applicationVersion: '1.2.0',
                   applicationLegalese: 'خدمات بيتك بشكل مظبوط',
                 ),
@@ -317,7 +317,7 @@ class ProfileScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Text(
-              'الدفع في Mazboot',
+              'الدفع في مظبوط',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
             ),
             SizedBox(height: 10),

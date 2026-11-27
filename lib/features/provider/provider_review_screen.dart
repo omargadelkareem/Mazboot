@@ -331,7 +331,7 @@ class _ReviewContent extends StatelessWidget {
     }
     if (application.isFullyActive) {
       return const _ReviewPresentation(
-        title: 'أهلًا بيك في Mazboot',
+        title: 'أهلًا بيك في مظبوط',
         description:
             'حسابك اتفعّل بالكامل. تقدر تدخل لوحة الصنايعي وتستقبل الطلبات وتتابع شغلك.',
         badge: 'نشط',
@@ -343,7 +343,7 @@ class _ReviewContent extends StatelessWidget {
     return const _ReviewPresentation(
       title: 'طلبك قيد المراجعة',
       description:
-          'وصلتنا بياناتك وفريق Mazboot بيراجعها. ارجع بنفس رقم الموبايل وكلمة المرور لمتابعة النتيجة.',
+          'وصلتنا بياناتك وفريق مظبوط بيراجعها. ارجع بنفس رقم الموبايل وكلمة المرور لمتابعة النتيجة.',
       badge: 'قيد المراجعة',
       icon: Icons.manage_search_rounded,
       color: AppColors.orange,

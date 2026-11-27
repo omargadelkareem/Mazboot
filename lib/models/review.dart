@@ -22,7 +22,7 @@ class TechnicianReview {
         id: id,
         orderId: map['orderId']?.toString() ?? '',
         customerId: map['customerId']?.toString() ?? '',
-        customerName: map['customerName']?.toString() ?? 'عميل Mazboot',
+        customerName: map['customerName']?.toString() ?? 'عميل مظبوط',
         rating: (map['rating'] as num?)?.toInt() ?? 0,
         comment: map['comment']?.toString() ?? '',
         createdAt: (map['createdAt'] as num?)?.toInt() ?? 0,

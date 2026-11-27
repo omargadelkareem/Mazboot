@@ -18,15 +18,6 @@ class SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          width: 4,
-          height: 18,
-          decoration: BoxDecoration(
-            color: AppColors.orange,
-            borderRadius: BorderRadius.circular(6),
-          ),
-        ),
-        const SizedBox(width: 9),
         Expanded(
           child: Text(
             title,
@@ -38,7 +29,10 @@ class SectionHeader extends StatelessWidget {
             onPressed: onAction,
             child: Text(
               actionLabel!,
-              style: const TextStyle(color: AppColors.navy, fontSize: 12),
+              style: const TextStyle(
+                color: AppColors.primaryDark,
+                fontSize: 12,
+              ),
             ),
           ),
       ],

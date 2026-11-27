@@ -114,71 +114,73 @@ class _CategoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dark = category.backgroundColor == AppColors.navy;
-    final foreground = dark ? Colors.white : AppColors.navy;
     return InkWell(
       onTap: () => context.push('/technicians/${category.id}'),
-      borderRadius: BorderRadius.circular(21),
+      borderRadius: BorderRadius.circular(18),
       child: Ink(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-          color: category.backgroundColor,
-          borderRadius: BorderRadius.circular(21),
-          border: dark ? null : Border.all(color: AppColors.border),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: AppColors.border),
         ),
-        child: Stack(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Positioned(
-              left: -16,
-              bottom: -18,
-              child: Icon(
-                category.icon,
-                size: 98,
-                color: foreground.withOpacity(0.1),
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
                 Container(
-                  width: 42,
-                  height: 42,
+                  width: 46,
+                  height: 46,
                   decoration: BoxDecoration(
-                    color: dark ? Colors.white.withOpacity(0.12) : Colors.white,
-                    borderRadius: BorderRadius.circular(13),
+                    color: AppColors.primarySoft,
+                    borderRadius: BorderRadius.circular(14),
                   ),
                   child: Icon(
                     category.icon,
-                    color: dark ? AppColors.orange : foreground,
-                    size: 23,
+                    color: AppColors.primaryDark,
+                    size: 25,
                   ),
                 ),
                 const Spacer(),
-                Text(
-                  category.name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: foreground,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                  ),
+                const Icon(
+                  Icons.arrow_back_ios_new_rounded,
+                  color: AppColors.textMuted,
+                  size: 15,
                 ),
-                Text(
-                  category.subtitle,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: foreground.withOpacity(0.62),
-                    fontSize: 9,
-                  ),
-                ),
-                const SizedBox(height: 6),
+              ],
+            ),
+            const Spacer(),
+            Text(
+              category.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: AppColors.text,
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            Text(
+              category.subtitle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: AppColors.textMuted,
+                fontSize: 9,
+              ),
+            ),
+            const SizedBox(height: 7),
+            Row(
+              children: [
+                const Icon(Icons.circle, color: AppColors.success, size: 7),
+                const SizedBox(width: 5),
                 Text(
                   '$techniciansCount فني متاح',
-                  style: TextStyle(
-                    color: dark ? AppColors.orange : AppColors.success,
+                  style: const TextStyle(
+                    color: AppColors.success,
                     fontSize: 9,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],

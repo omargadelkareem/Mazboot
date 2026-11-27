@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/theme/app_colors.dart';
-import '../../core/utils/ui_utils.dart';
 import '../../core/widgets/brand_logo.dart';
 import '../../core/widgets/remote_image.dart';
 import '../../core/widgets/section_header.dart';
@@ -13,315 +12,167 @@ import '../notifications/notifications_cubit.dart';
 import '../profile/profile_cubit.dart';
 import 'home_cubit.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedRoom = 0;
-
-  static const _rooms = <_RoomOption>[
-    _RoomOption(id: 'bathroom', label: 'الحمام', icon: Icons.bathroom_rounded),
-    _RoomOption(id: 'kitchen', label: 'المطبخ', icon: Icons.kitchen_rounded),
-    _RoomOption(id: 'living', label: 'غرفة', icon: Icons.weekend_rounded),
-    _RoomOption(
-      id: 'appliances',
-      label: 'أجهزة',
-      icon: Icons.devices_other_rounded,
-    ),
-  ];
-
-  void _openCategory(ServiceCategory category) {
-    context.push('/technicians/${category.id}');
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final homeState = context.watch<HomeCubit>().state;
+    final home = context.watch<HomeCubit>().state;
     final profile = context.watch<ProfileCubit>().state.profile;
     final unreadCount = context.watch<NotificationsCubit>().state.unreadCount;
-    final location = profile?.locationLabel ?? 'حدد موقعك';
-    final roomId = _rooms[_selectedRoom].id;
-    final matchingCategories = homeState.categories
-        .where((category) => category.roomIds.contains(roomId))
+    final categories = home.categories.take(8).toList();
+    final technicians = home.technicians
+        .where((item) => item.isAvailable && item.canReceiveOrders)
+        .take(6)
         .toList();
-    final otherCategories = homeState.categories
-        .where((category) => !category.roomIds.contains(roomId))
-        .toList();
-    final categories = [...matchingCategories, ...otherCategories];
 
-    if (homeState.loading && categories.isEmpty) {
+    if (home.loading && categories.isEmpty && technicians.isEmpty) {
       return const SafeArea(child: Center(child: CircularProgressIndicator()));
     }
 
     return SafeArea(
       bottom: false,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: 112),
+      child: ListView(
         physics: const BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(18, 12, 18, 12),
-              child: _TopBar(
-                location: location,
-                customerName: profile?.name ?? 'عميل Mazboot',
-                unreadCount: unreadCount,
-              ),
+        padding: const EdgeInsets.fromLTRB(18, 14, 18, 112),
+        children: <Widget>[
+          _TopBar(
+            location: profile?.locationLabel ?? 'حدد موقعك',
+            unreadCount: unreadCount,
+          ),
+          const SizedBox(height: 26),
+          const Text(
+            'بيتك دايمًا مظبوط',
+            style: TextStyle(
+              color: AppColors.text,
+              fontSize: 29,
+              fontWeight: FontWeight.w700,
+              height: 1.15,
             ),
-            const _ProblemHero(),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(18, 24, 18, 0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SectionHeader(
-                    title: 'المشكلة فين؟',
-                    actionLabel: 'عرض الكل',
-                    onAction: () => context.push('/categories'),
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 106,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _rooms.length,
-                      separatorBuilder: (_, __) => const SizedBox(width: 9),
-                      itemBuilder: (_, index) {
-                        final selected = _selectedRoom == index;
-                        return _RoomCard(
-                          option: _rooms[index],
-                          selected: selected,
-                          onTap: () => setState(() => _selectedRoom = index),
-                        );
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  SectionHeader(
-                    title: 'اختار الحرفة',
-                    actionLabel: 'كل الحرف',
-                    onAction: () => context.push('/categories'),
-                  ),
-                  const SizedBox(height: 12),
-                  if (categories.length >= 6)
-                    SizedBox(
-                      height: 324,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Expanded(
-                            flex: 5,
-                            child: _BentoCategoryTile(
-                              category: categories[1],
-                              largeIcon: true,
-                              onTap: () => _openCategory(categories[1]),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            flex: 7,
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  flex: 5,
-                                  child: _BentoCategoryTile(
-                                    category: categories[0],
-                                    dark: true,
-                                    horizontal: true,
-                                    onTap: () => _openCategory(categories[0]),
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Expanded(
-                                  flex: 3,
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: _BentoCategoryTile(
-                                          category: categories[2],
-                                          compact: true,
-                                          onTap: () =>
-                                              _openCategory(categories[2]),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Expanded(
-                                        child: _BentoCategoryTile(
-                                          category: categories[3],
-                                          compact: true,
-                                          onTap: () =>
-                                              _openCategory(categories[3]),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                Expanded(
-                                  flex: 3,
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: _BentoCategoryTile(
-                                          category: categories[4],
-                                          compact: true,
-                                          onTap: () =>
-                                              _openCategory(categories[4]),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Expanded(
-                                        child: _BentoCategoryTile(
-                                          category: categories[5],
-                                          compact: true,
-                                          onTap: () =>
-                                              _openCategory(categories[5]),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  else
-                    _CompactCategories(
-                      categories: categories,
-                      onTap: _openCategory,
-                    ),
-                  const SizedBox(height: 24),
-                  _NearbyCard(
-                    technicians: homeState.technicians,
-                    onTap: () => context.push('/categories'),
-                  ),
-                ],
-              ),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'كل خدمات البيت الموثوقة في مكان واحد',
+            style: TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
             ),
-          ],
-        ),
+          ),
+          const SizedBox(height: 18),
+          _SearchBox(onTap: () => context.push('/categories')),
+          const SizedBox(height: 14),
+          _QuickRequestCard(onTap: () => context.push('/categories')),
+          const SizedBox(height: 28),
+          SectionHeader(
+            title: 'الخدمات الأكثر طلبًا',
+            actionLabel: 'عرض الكل',
+            onAction: () => context.push('/categories'),
+          ),
+          const SizedBox(height: 13),
+          _ServicesGrid(
+            categories: categories,
+            onTap: (category) =>
+                context.push('/technicians/${category.id}'),
+          ),
+          const SizedBox(height: 28),
+          SectionHeader(
+            title: 'فنيين موثوقين',
+            actionLabel: 'عرض الكل',
+            onAction: () => context.push('/categories'),
+          ),
+          const SizedBox(height: 13),
+          _TechniciansStrip(technicians: technicians),
+        ],
       ),
     );
   }
 }
 
 class _TopBar extends StatelessWidget {
-  const _TopBar({
-    required this.location,
-    required this.customerName,
-    required this.unreadCount,
-  });
+  const _TopBar({required this.location, required this.unreadCount});
 
   final String location;
-  final String customerName;
   final int unreadCount;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [
-        const BrandLogo(compact: true, markSize: 40),
-        const SizedBox(width: 8),
-        Expanded(
-          child: InkWell(
-            onTap: () => context.push('/location'),
-            borderRadius: BorderRadius.circular(18),
-            child: Container(
-              height: 44,
-              padding: const EdgeInsets.symmetric(horizontal: 11),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(color: AppColors.border),
-              ),
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    color: AppColors.navy,
-                    size: 21,
-                  ),
-                  const SizedBox(width: 5),
-                  Expanded(
-                    child: Text(
-                      location,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w700,
-                      ),
+      children: <Widget>[
+        const BrandLogo(compact: true, markSize: 36),
+        const Spacer(),
+        InkWell(
+          onTap: () => context.push('/location'),
+          borderRadius: BorderRadius.circular(14),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Icon(
+                  Icons.location_on_rounded,
+                  color: AppColors.primary,
+                  size: 19,
+                ),
+                const SizedBox(width: 4),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 105),
+                  child: Text(
+                    location,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppColors.text,
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                ],
-              ),
+                ),
+                const Icon(
+                  Icons.keyboard_arrow_down_rounded,
+                  color: AppColors.textMuted,
+                  size: 18,
+                ),
+              ],
             ),
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 4),
         InkWell(
           onTap: () => context.push('/notifications'),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(15),
           child: Stack(
             clipBehavior: Clip.none,
-            children: [
+            children: <Widget>[
               Container(
                 width: 42,
                 height: 42,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: Colors.white,
-                  shape: BoxShape.circle,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: AppColors.border),
                 ),
                 child: const Icon(
                   Icons.notifications_none_rounded,
-                  color: AppColors.navy,
+                  color: AppColors.text,
+                  size: 22,
                 ),
               ),
               if (unreadCount > 0)
-                Positioned(
+                PositionedDirectional(
+                  end: -2,
                   top: -2,
-                  right: -2,
                   child: Container(
-                    constraints: const BoxConstraints(
-                      minWidth: 17,
-                      minHeight: 17,
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(
-                      color: AppColors.orange,
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary,
                       shape: BoxShape.circle,
-                    ),
-                    child: Text(
-                      unreadCount > 9 ? '9+' : '$unreadCount',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 8,
-                        fontWeight: FontWeight.w700,
-                      ),
+                      border: Border.all(color: Colors.white, width: 2),
                     ),
                   ),
                 ),
             ],
-          ),
-        ),
-        const SizedBox(width: 7),
-        CircleAvatar(
-          radius: 21,
-          backgroundColor: AppColors.powderPeach,
-          child: Text(
-            customerName.trim().isEmpty ? 'ح' : customerName.trim()[0],
-            style: const TextStyle(
-              color: AppColors.navy,
-              fontWeight: FontWeight.w700,
-            ),
           ),
         ),
       ],
@@ -329,102 +180,50 @@ class _TopBar extends StatelessWidget {
   }
 }
 
-class _ProblemHero extends StatelessWidget {
-  const _ProblemHero();
+class _SearchBox extends StatelessWidget {
+  const _SearchBox({required this.onTap});
+
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return ClipPath(
-      clipper: _HeroClipper(),
-      child: CustomPaint(
-        painter: _BlueprintPainter(),
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
         child: Container(
-          height: 264,
-          padding: const EdgeInsets.fromLTRB(22, 28, 22, 36),
-          color: AppColors.navy,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(text: 'إيه اللي محتاج '),
-                    TextSpan(
-                      text: 'يتظبط؟',
-                      style: TextStyle(color: AppColors.orange),
-                    ),
-                  ],
-                ),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 27,
-                  fontWeight: FontWeight.w700,
-                ),
+          height: 56,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.border),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: AppColors.ink.withOpacity(0.035),
+                blurRadius: 16,
+                offset: const Offset(0, 6),
               ),
-              const SizedBox(height: 18),
-              InkWell(
-                onTap: () => context.push('/categories'),
-                borderRadius: BorderRadius.circular(24),
-                child: Container(
-                  height: 62,
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () => context.push('/categories'),
-                        icon: const Icon(
-                          Icons.camera_alt_outlined,
-                          color: AppColors.navy,
-                        ),
-                      ),
-                      Container(width: 1, height: 28, color: AppColors.border),
-                      const Expanded(
-                        child: Text(
-                          'اكتب، اتكلم أو صوّر المشكلة',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: AppColors.textMuted,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () => UiUtils.showSnackBar(
-                          context,
-                          'اختار الحرفة والفني الأول، وبعدها اكتب أو صوّر المشكلة.',
-                        ),
-                        icon: const Icon(
-                          Icons.mic_none_rounded,
-                          color: AppColors.navy,
-                        ),
-                      ),
-                    ],
+            ],
+          ),
+          child: const Row(
+            children: <Widget>[
+              Icon(Icons.search_rounded, color: AppColors.primary, size: 24),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'بتدور على إيه؟',
+                  style: TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 13,
                   ),
                 ),
               ),
-              const SizedBox(height: 14),
-              Center(
-                child: FilledButton.icon(
-                  onPressed: () => context.push('/technicians/electricity'),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: AppColors.orange,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 22,
-                      vertical: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  icon: const Icon(Icons.bolt_rounded, size: 19),
-                  label: const Text('طلب عاجل'),
-                ),
+              Icon(
+                Icons.tune_rounded,
+                color: AppColors.textMuted,
+                size: 20,
               ),
             ],
           ),
@@ -434,164 +233,66 @@ class _ProblemHero extends StatelessWidget {
   }
 }
 
-class _RoomCard extends StatelessWidget {
-  const _RoomCard({
-    required this.option,
-    required this.selected,
-    required this.onTap,
-  });
+class _QuickRequestCard extends StatelessWidget {
+  const _QuickRequestCard({required this.onTap});
 
-  final _RoomOption option;
-  final bool selected;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 96,
+    return Material(
+      color: AppColors.primary,
+      borderRadius: BorderRadius.circular(18),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(18),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: selected ? AppColors.orangeSoft : Colors.white,
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(
-              color: selected ? AppColors.orange : AppColors.border,
-              width: selected ? 1.5 : 1,
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                option.icon,
-                color: selected ? AppColors.orange : AppColors.navy,
-                size: 34,
-              ),
-              const SizedBox(height: 7),
-              Text(
-                option.label,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
+        child: Container(
+          height: 92,
+          padding: const EdgeInsets.symmetric(horizontal: 18),
+          child: Row(
+            children: <Widget>[
+              Container(
+                width: 54,
+                height: 54,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.17),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: const Icon(
+                  Icons.calendar_month_outlined,
+                  color: Colors.white,
+                  size: 29,
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _BentoCategoryTile extends StatelessWidget {
-  const _BentoCategoryTile({
-    required this.category,
-    required this.onTap,
-    this.dark = false,
-    this.compact = false,
-    this.horizontal = false,
-    this.largeIcon = false,
-  });
-
-  final ServiceCategory category;
-  final VoidCallback onTap;
-  final bool dark;
-  final bool compact;
-  final bool horizontal;
-  final bool largeIcon;
-
-  @override
-  Widget build(BuildContext context) {
-    final foreground = dark ? Colors.white : AppColors.navy;
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(20),
-        child: Ink(
-          decoration: BoxDecoration(
-            color: dark ? AppColors.navy : category.backgroundColor,
-            borderRadius: BorderRadius.circular(20),
-            border: dark
-                ? null
-                : Border.all(color: AppColors.border.withOpacity(0.7)),
-          ),
-          child: Stack(
-            children: [
-              Positioned(
-                left: -12,
-                bottom: -18,
-                child: Icon(
-                  category.icon,
-                  size: largeIcon
-                      ? 142
-                      : compact
-                          ? 74
-                          : 102,
-                  color: foreground.withOpacity(dark ? 0.12 : 0.13),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(compact ? 10 : 15),
-                child: horizontal
-                    ? Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              category.name,
-                              style: TextStyle(
-                                color: foreground,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                          Container(
-                            width: 48,
-                            height: 48,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(
-                              category.icon,
-                              color: AppColors.orange,
-                              size: 27,
-                            ),
-                          ),
-                        ],
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Icon(
-                            category.icon,
-                            color: foreground,
-                            size: compact ? 24 : 33,
-                          ),
-                          const Spacer(),
-                          Text(
-                            category.name,
-                            style: TextStyle(
-                              color: foreground,
-                              fontSize: compact ? 13 : 20,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          if (!compact)
-                            Text(
-                              category.subtitle,
-                              style: TextStyle(
-                                color: foreground.withOpacity(0.65),
-                                fontSize: 10,
-                              ),
-                            ),
-                        ],
+              const SizedBox(width: 14),
+              const Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'طلب خدمة سريع',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
                       ),
+                    ),
+                    SizedBox(height: 3),
+                    Text(
+                      'اختار الخدمة وحدد الموعد المناسب ليك',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 11,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.white,
+                size: 18,
               ),
             ],
           ),
@@ -601,8 +302,8 @@ class _BentoCategoryTile extends StatelessWidget {
   }
 }
 
-class _CompactCategories extends StatelessWidget {
-  const _CompactCategories({required this.categories, required this.onTap});
+class _ServicesGrid extends StatelessWidget {
+  const _ServicesGrid({required this.categories, required this.onTap});
 
   final List<ServiceCategory> categories;
   final ValueChanged<ServiceCategory> onTap;
@@ -610,19 +311,9 @@ class _CompactCategories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (categories.isEmpty) {
-      return Container(
-        height: 126,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: const Text(
-          'لسه مفيش خدمات منشورة. استورد ملف البيانات التجريبية في Firebase.',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: AppColors.textMuted, fontSize: 11),
-        ),
+      return const _EmptyPanel(
+        icon: Icons.home_repair_service_outlined,
+        message: 'الخدمات هتظهر هنا بعد نشرها من لوحة التحكم.',
       );
     }
     return GridView.builder(
@@ -630,16 +321,15 @@ class _CompactCategories extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: categories.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount: 4,
         crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        childAspectRatio: 1.55,
+        mainAxisSpacing: 12,
+        childAspectRatio: 0.70,
       ),
       itemBuilder: (_, index) {
         final category = categories[index];
-        return _BentoCategoryTile(
+        return _ServiceCard(
           category: category,
-          compact: true,
           onTap: () => onTap(category),
         );
       },
@@ -647,250 +337,238 @@ class _CompactCategories extends StatelessWidget {
   }
 }
 
-class _NearbyCard extends StatelessWidget {
-  const _NearbyCard({required this.technicians, required this.onTap});
+class _ServiceCard extends StatelessWidget {
+  const _ServiceCard({required this.category, required this.onTap});
 
-  final List<Technician> technicians;
+  final ServiceCategory category;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final visibleTechnicians = technicians
-        .where((item) => item.isAvailable && item.canReceiveOrders)
-        .take(3)
-        .toList();
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(22),
-      child: Container(
-        height: 150,
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(22),
-          border: Border.all(color: AppColors.border),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '${visibleTechnicians.length} ',
-                          style: const TextStyle(color: AppColors.orange),
-                        ),
-                        const TextSpan(text: 'فنيين متاحين\nحوالين بيتك'),
-                      ],
-                    ),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                      height: 1.4,
-                    ),
-                  ),
-                  const SizedBox(height: 7),
-                  const Row(
-                    children: [
-                      Icon(Icons.circle, size: 8, color: AppColors.success),
-                      SizedBox(width: 5),
-                      Text(
-                        'متاح الآن',
-                        style: TextStyle(
-                          color: AppColors.success,
-                          fontSize: 11,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  const Row(
-                    children: [
-                      Text(
-                        'شوفهم على الخريطة',
-                        style: TextStyle(
-                          color: AppColors.navy,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      SizedBox(width: 3),
-                      Icon(
-                        Icons.arrow_back_ios_new_rounded,
-                        size: 11,
-                        color: AppColors.navy,
-                      ),
-                    ],
-                  ),
-                ],
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(7, 11, 7, 9),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.border),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                width: 48,
+                height: 48,
+                decoration: const BoxDecoration(
+                  color: AppColors.primarySoft,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  category.icon,
+                  color: AppColors.primaryDark,
+                  size: 25,
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            SizedBox(
-              width: 155,
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Positioned.fill(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: CustomPaint(painter: _MiniMapPainter()),
-                    ),
-                  ),
-                  for (var index = 0;
-                      index < visibleTechnicians.length;
-                      index++)
-                    Positioned(
-                      left: 18 + (index * 36),
-                      top: 46,
-                      child: Container(
-                        width: 54,
-                        height: 54,
-                        padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            RemoteImage(
-                              url: visibleTechnicians[index].imageUrl,
-                              base64Data: visibleTechnicians[index].imageBase64,
-                              width: 50,
-                              height: 50,
-                              borderRadius: 30,
-                            ),
-                            const Positioned(
-                              bottom: -2,
-                              right: -2,
-                              child: CircleAvatar(
-                                radius: 8,
-                                backgroundColor: Colors.white,
-                                child: Icon(
-                                  Icons.check_circle_rounded,
-                                  color: AppColors.success,
-                                  size: 15,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                ],
+              const SizedBox(height: 8),
+              Text(
+                category.name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppColors.text,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w700,
+                  height: 1.25,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _RoomOption {
-  const _RoomOption({
-    required this.id,
-    required this.label,
-    required this.icon,
-  });
+class _TechniciansStrip extends StatelessWidget {
+  const _TechniciansStrip({required this.technicians});
 
-  final String id;
-  final String label;
-  final IconData icon;
-}
-
-class _HeroClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    return Path()
-      ..lineTo(size.width, 0)
-      ..lineTo(size.width, size.height - 30)
-      ..quadraticBezierTo(
-        size.width * 0.5,
-        size.height + 22,
-        0,
-        size.height - 30,
-      )
-      ..close();
-  }
+  final List<Technician> technicians;
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
-}
-
-class _BlueprintPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final blue = Paint()
-      ..color = Colors.white.withOpacity(0.06)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-    final orange = Paint()
-      ..color = AppColors.orange.withOpacity(0.18)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-
-    for (var index = 0; index < 7; index++) {
-      final offset = index * 48.0;
-      canvas.drawLine(
-        Offset(offset, 0),
-        Offset(offset + 70, size.height),
-        blue,
-      );
-      canvas.drawRect(
-        Rect.fromLTWH(size.width - offset - 90, 18 + (index * 10), 62, 44),
-        orange,
+  Widget build(BuildContext context) {
+    if (technicians.isEmpty) {
+      return const _EmptyPanel(
+        icon: Icons.engineering_outlined,
+        message: 'هنعرض لك الفنيين المتاحين فور اعتماد حساباتهم.',
       );
     }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class _MiniMapPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final streets = Paint()
-      ..color = Colors.white
-      ..strokeWidth = 3
-      ..style = PaintingStyle.stroke;
-    final route = Paint()
-      ..color = AppColors.navy
-      ..strokeWidth = 3
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
-    for (var i = -2; i < 8; i++) {
-      canvas.drawLine(
-        Offset(0, i * 26.0),
-        Offset(size.width, (i * 26.0) + 62),
-        streets,
-      );
-      canvas.drawLine(
-        Offset(i * 36.0, 0),
-        Offset((i * 36.0) + 48, size.height),
-        streets,
-      );
-    }
-    final path = Path()
-      ..moveTo(12, size.height - 20)
-      ..lineTo(46, size.height - 45)
-      ..lineTo(78, size.height - 38)
-      ..lineTo(110, 30)
-      ..lineTo(size.width - 12, 20);
-    canvas.drawPath(path, route);
-    canvas.drawCircle(
-      Offset(size.width - 12, 20),
-      6,
-      Paint()..color = AppColors.orange,
+    return SizedBox(
+      height: 244,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: technicians.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (_, index) =>
+            _TechnicianPreviewCard(technician: technicians[index]),
+      ),
     );
   }
+}
+
+class _TechnicianPreviewCard extends StatelessWidget {
+  const _TechnicianPreviewCard({required this.technician});
+
+  final Technician technician;
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 218,
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        child: InkWell(
+          onTap: () => context.push('/technician/${technician.id}'),
+          borderRadius: BorderRadius.circular(18),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(18),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Stack(
+                  children: <Widget>[
+                    RemoteImage(
+                      url: technician.imageUrl,
+                      base64Data: technician.imageBase64,
+                      width: double.infinity,
+                      height: 116,
+                      borderRadius: 17,
+                    ),
+                    if (technician.isVerified)
+                      PositionedDirectional(
+                        end: 10,
+                        top: 10,
+                        child: Container(
+                          width: 27,
+                          height: 27,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.verified_rounded,
+                            color: AppColors.primary,
+                            size: 19,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          technician.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          technician.profession,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: AppColors.textMuted,
+                            fontSize: 10,
+                          ),
+                        ),
+                        const Spacer(),
+                        Row(
+                          children: <Widget>[
+                            const Icon(
+                              Icons.star_rounded,
+                              color: AppColors.warning,
+                              size: 16,
+                            ),
+                            const SizedBox(width: 3),
+                            Text(
+                              technician.rating.toStringAsFixed(1),
+                              style: const TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              technician.visitFee > 0
+                                  ? 'من ${technician.visitFee} ج.م'
+                                  : 'السعر بالاتفاق',
+                              style: const TextStyle(
+                                color: AppColors.primaryDark,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyPanel extends StatelessWidget {
+  const _EmptyPanel({required this.icon, required this.message});
+
+  final IconData icon;
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(22),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        children: <Widget>[
+          Icon(icon, color: AppColors.primary, size: 34),
+          const SizedBox(height: 9),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppColors.textMuted,
+              fontSize: 11,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }

@@ -15,7 +15,7 @@ class VerifiedBadge extends StatelessWidget {
         vertical: compact ? 3 : 5,
       ),
       decoration: BoxDecoration(
-        color: AppColors.powderGreen,
+        color: AppColors.primarySoft,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -23,14 +23,14 @@ class VerifiedBadge extends StatelessWidget {
         children: [
           const Icon(
             Icons.verified_rounded,
-            color: AppColors.success,
+            color: AppColors.primary,
             size: 15,
           ),
           if (!compact) ...[
             const SizedBox(width: 4),
             const Text(
               'موثّق',
-              style: TextStyle(fontSize: 11, color: AppColors.success),
+              style: TextStyle(fontSize: 11, color: AppColors.primaryDark),
             ),
           ],
         ],

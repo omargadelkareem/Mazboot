@@ -50,7 +50,7 @@ class _TechniciansScreenState extends State<TechniciansScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          category == null ? 'الفنيون' : 'فنيين ${category.name} قريبين منك',
+          category == null ? 'الفنيون' : 'فنيين ${category.name}',
         ),
       ),
       body: Column(
@@ -168,10 +168,10 @@ class _FilterButton extends StatelessWidget {
         height: 42,
         padding: const EdgeInsets.symmetric(horizontal: 9),
         decoration: BoxDecoration(
-          color: selected ? AppColors.navy : Colors.white,
+          color: selected ? AppColors.primary : Colors.white,
           borderRadius: BorderRadius.circular(13),
           border: Border.all(
-            color: selected ? AppColors.navy : AppColors.border,
+            color: selected ? AppColors.primary : AppColors.border,
           ),
         ),
         child: Row(
@@ -181,7 +181,7 @@ class _FilterButton extends StatelessWidget {
             Icon(
               icon,
               size: 16,
-              color: selected ? Colors.white : AppColors.navy,
+              color: selected ? Colors.white : AppColors.primaryDark,
             ),
             const SizedBox(width: 5),
             Text(
@@ -213,12 +213,12 @@ class _TechnicianCard extends StatelessWidget {
     );
     return InkWell(
       onTap: () => context.push('/technician/${technician.id}'),
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(18),
       child: Ink(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(18),
           border: Border.all(color: AppColors.border),
         ),
         child: Row(
@@ -227,9 +227,9 @@ class _TechnicianCard extends StatelessWidget {
             RemoteImage(
               url: technician.imageUrl,
               base64Data: technician.imageBase64,
-              width: 104,
-              height: 126,
-              borderRadius: 16,
+              width: 96,
+              height: 116,
+              borderRadius: 15,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -284,7 +284,7 @@ class _TechnicianCard extends StatelessWidget {
                         rating: technician.rating,
                         reviews: technician.reviewsCount,
                       ),
-                      const SizedBox(width: 9),
+                      const SizedBox(width: 8),
                       const Icon(
                         Icons.work_outline_rounded,
                         size: 14,
@@ -304,30 +304,38 @@ class _TechnicianCard extends StatelessWidget {
                   Row(
                     children: <Widget>[
                       const Icon(
-                        Icons.near_me_outlined,
+                        Icons.location_on_outlined,
                         size: 14,
                         color: AppColors.textMuted,
                       ),
                       const SizedBox(width: 3),
-                      Text(
-                        '${technician.distanceKm} كم',
-                        style: const TextStyle(
-                          fontSize: 10,
-                          color: AppColors.textMuted,
+                      Expanded(
+                        child: Text(
+                          technician.area.isNotEmpty
+                              ? technician.area
+                              : '${technician.distanceKm} كم',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: AppColors.textMuted,
+                          ),
                         ),
                       ),
-                      const Spacer(),
+                      const SizedBox(width: 5),
                       AvailabilityChip(available: technician.isAvailable),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 9),
                   Row(
                     children: <Widget>[
                       Expanded(
                         child: Text(
-                          'إرسال الطلب مجانًا',
+                          technician.visitFee > 0
+                              ? 'يبدأ من ${technician.visitFee} ج.م'
+                              : 'السعر بالاتفاق',
                           style: const TextStyle(
-                            color: AppColors.navy,
+                            color: AppColors.primaryDark,
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
                           ),
@@ -339,7 +347,7 @@ class _TechnicianCard extends StatelessWidget {
                           vertical: 8,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.orange,
+                          color: AppColors.primary,
                           borderRadius: BorderRadius.circular(11),
                         ),
                         child: const Text(

@@ -63,7 +63,7 @@ class RemoteImage extends StatelessWidget {
             height: 22,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              color: AppColors.navy,
+              color: AppColors.primary,
             ),
           ),
         ),
@@ -77,7 +77,11 @@ class RemoteImage extends StatelessWidget {
     height: height,
     color: AppColors.powderBlue,
     alignment: Alignment.center,
-    child: const Icon(Icons.person_rounded, color: AppColors.navy, size: 34),
+    child: const Icon(
+      Icons.person_rounded,
+      color: AppColors.primary,
+      size: 34,
+    ),
   );
 
   static Uint8List? _decodeBase64(String? value) {

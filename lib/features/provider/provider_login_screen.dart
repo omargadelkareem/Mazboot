@@ -100,13 +100,13 @@ class _ProviderLoginScreenState extends State<ProviderLoginScreen> {
                     child: Container(
                       width: 112,
                       height: 112,
-                      decoration: const BoxDecoration(
-                        color: AppColors.powderPeach,
-                        shape: BoxShape.circle,
+                      decoration: BoxDecoration(
+                        color: AppColors.primarySoft,
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       child: const Icon(
                         Icons.engineering_rounded,
-                        color: AppColors.navy,
+                        color: AppColors.primaryDark,
                         size: 58,
                       ),
                     ),
@@ -202,7 +202,7 @@ class _ProviderLoginScreenState extends State<ProviderLoginScreen> {
                     label: const Text('تقديم طلب انضمام جديد'),
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size.fromHeight(52),
-                      foregroundColor: AppColors.navy,
+                      foregroundColor: AppColors.primaryDark,
                       side: const BorderSide(color: AppColors.border),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
@@ -252,7 +252,7 @@ class _ProviderLoginScreenState extends State<ProviderLoginScreen> {
       builder: (dialogContext) => AlertDialog(
         title: const Text('استرجاع حساب الصنايعي'),
         content: const Text(
-          'لأمان حسابك، تواصل مع إدارة Mazboot من رقم الموبايل المسجل علشان يتم التحقق وإعادة ضبط كلمة المرور.',
+          'لأمان حسابك، تواصل مع إدارة مظبوط من رقم الموبايل المسجل علشان يتم التحقق وإعادة ضبط كلمة المرور.',
         ),
         actions: <Widget>[
           FilledButton(

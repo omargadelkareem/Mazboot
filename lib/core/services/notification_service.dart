@@ -99,7 +99,7 @@ class NotificationService {
     if (notification == null) return;
     await _local.show(
       notification.hashCode,
-      notification.title ?? 'Mazboot',
+      notification.title ?? 'مظبوط',
       notification.body ?? '',
       const NotificationDetails(
         android: AndroidNotificationDetails(

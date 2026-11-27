@@ -467,7 +467,7 @@ class TrackingScreen extends StatelessWidget {
     ServiceOrderStatus.accepted => 'تم تأكيد الموعد',
     ServiceOrderStatus.onTheWay => 'تابع وصول الفني وتواصل معاه',
     ServiceOrderStatus.inProgress => 'الفني بدأ تنفيذ الخدمة',
-    ServiceOrderStatus.completed => 'شكرًا لاستخدامك Mazboot',
+    ServiceOrderStatus.completed => 'شكرًا لاستخدامك مظبوط',
     ServiceOrderStatus.cancelled => 'راجع سبب الإلغاء في تفاصيل الطلب',
   };
 }

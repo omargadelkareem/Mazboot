@@ -150,7 +150,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final image = context.read<ImageService>().decode(profile.imageBase64);
-    final name = profile.name.trim().isEmpty ? 'صنايعي Mazboot' : profile.name;
+    final name = profile.name.trim().isEmpty ? 'صنايعي مظبوط' : profile.name;
     return Row(
       children: <Widget>[
         CircleAvatar(
@@ -161,7 +161,7 @@ class _Header extends StatelessWidget {
               ? Text(
                   name[0],
                   style: const TextStyle(
-                    color: AppColors.navy,
+                    color: AppColors.primaryDark,
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
                   ),
@@ -207,11 +207,9 @@ class _AvailabilityCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: available ? AppColors.navy : Colors.white,
-        borderRadius: BorderRadius.circular(23),
-        border: Border.all(
-          color: available ? AppColors.navy : AppColors.border,
-        ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: AppColors.border),
       ),
       child: Row(
         children: <Widget>[
@@ -219,14 +217,12 @@ class _AvailabilityCard extends StatelessWidget {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: available
-                  ? Colors.white.withOpacity(0.12)
-                  : AppColors.powderPeach,
-              shape: BoxShape.circle,
+              color: available ? AppColors.primarySoft : AppColors.powderPeach,
+              borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(
               available ? Icons.work_history_rounded : Icons.pause_rounded,
-              color: available ? Colors.white : AppColors.orange,
+              color: available ? AppColors.primary : AppColors.warning,
             ),
           ),
           const SizedBox(width: 12),
@@ -237,7 +233,7 @@ class _AvailabilityCard extends StatelessWidget {
                 Text(
                   available ? 'متاح لاستقبال طلبات' : 'استقبال الطلبات متوقف',
                   style: TextStyle(
-                    color: available ? Colors.white : AppColors.text,
+                    color: AppColors.text,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -246,7 +242,7 @@ class _AvailabilityCard extends StatelessWidget {
                       ? 'ملفك ظاهر للعملاء ويمكنهم إرسال طلب.'
                       : 'شغّل الحالة لما تكون جاهز للشغل.',
                   style: TextStyle(
-                    color: available ? Colors.white70 : AppColors.textMuted,
+                    color: AppColors.textMuted,
                     fontSize: 10,
                   ),
                 ),
@@ -255,8 +251,8 @@ class _AvailabilityCard extends StatelessWidget {
           ),
           Switch.adaptive(
             value: available,
-            activeColor: AppColors.orange,
-            activeTrackColor: Colors.white,
+            activeColor: Colors.white,
+            activeTrackColor: AppColors.primary,
             onChanged: saving
                 ? null
                 : context.read<ProviderWorkspaceCubit>().setAvailability,

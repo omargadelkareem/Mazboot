@@ -26,7 +26,7 @@ class ProviderProfileScreen extends StatelessWidget {
       return const SafeArea(child: Center(child: Text('تعذر تحميل الحساب.')));
     }
     final image = context.read<ImageService>().decode(profile.imageBase64);
-    final name = profile.name.isEmpty ? 'صنايعي Mazboot' : profile.name;
+    final name = profile.name.isEmpty ? 'صنايعي مظبوط' : profile.name;
     return SafeArea(
       bottom: false,
       child: ListView(
@@ -341,7 +341,7 @@ class ProviderProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             const Text(
-              'Mazboot لا تخصم عمولة من سعر الشغل ولا تسجل المبلغ المتفق عليه. اتفق مع العميل داخل المحادثة واستلم المقابل منه مباشرة بعد الخدمة.',
+              'مظبوط لا تخصم عمولة من سعر الشغل ولا تسجل المبلغ المتفق عليه. اتفق مع العميل داخل المحادثة واستلم المقابل منه مباشرة بعد الخدمة.',
               style: TextStyle(color: AppColors.textMuted, height: 1.65),
             ),
           ],

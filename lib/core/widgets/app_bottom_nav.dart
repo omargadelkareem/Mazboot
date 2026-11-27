@@ -18,19 +18,17 @@ class AppBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      minimum: const EdgeInsets.fromLTRB(14, 0, 14, 10),
       child: Container(
-        height: 68,
-        padding: const EdgeInsets.all(7),
+        height: 72,
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 7),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(28),
-          border: Border.all(color: AppColors.border),
+          border: const Border(top: BorderSide(color: AppColors.border)),
           boxShadow: [
             BoxShadow(
-              color: AppColors.navy.withOpacity(0.08),
-              blurRadius: 24,
-              offset: const Offset(0, 9),
+              color: AppColors.ink.withOpacity(0.06),
+              blurRadius: 18,
+              offset: const Offset(0, -4),
             ),
           ],
         ),
@@ -41,40 +39,36 @@ class AppBottomNav extends StatelessWidget {
             return Expanded(
               child: InkWell(
                 onTap: () => onChanged(itemIndex),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(14),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 220),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 5,
-                    vertical: 9,
-                  ),
-                  decoration: BoxDecoration(
-                    color: selected ? AppColors.orange : Colors.transparent,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  decoration: const BoxDecoration(),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(
                         item.icon,
-                        size: 21,
-                        color: selected ? Colors.white : AppColors.navy,
+                        size: 23,
+                        color: selected
+                            ? AppColors.primary
+                            : AppColors.textMuted,
                       ),
-                      if (selected) ...[
-                        const SizedBox(width: 5),
-                        Flexible(
-                          child: Text(
-                            item.label,
-                            overflow: TextOverflow.fade,
-                            softWrap: false,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
+                      const SizedBox(height: 3),
+                      Text(
+                        item.label,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: TextStyle(
+                          color: selected
+                              ? AppColors.primaryDark
+                              : AppColors.textMuted,
+                          fontSize: 10,
+                          fontWeight: selected
+                              ? FontWeight.w700
+                              : FontWeight.w500,
                         ),
-                      ],
+                      ),
                     ],
                   ),
                 ),
