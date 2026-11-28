@@ -52,19 +52,19 @@ class GoogleLoginScreen extends StatelessWidget {
                     width: 126,
                     height: 126,
                     alignment: Alignment.center,
-                    decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: AppColors.powderBlue,
-                      shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(32),
                     ),
                     child: const Icon(
                       Icons.person_rounded,
                       size: 66,
-                      color: AppColors.navy,
+                      color: AppColors.primaryDark,
                     ),
                   ),
                   const SizedBox(height: 30),
                   Text(
-                    'أهلًا بيك في Mazboot',
+                    'أهلًا بيك في مظبوط',
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.displaySmall,
                   ),

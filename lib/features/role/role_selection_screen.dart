@@ -43,7 +43,7 @@ class RoleSelectionScreen extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                'هتستخدم Mazboot إزاي؟',
+                'هتستخدم مظبوط إزاي؟',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.displaySmall,
               ),
@@ -58,7 +58,6 @@ class RoleSelectionScreen extends StatelessWidget {
                 title: 'أنا عميل',
                 subtitle: 'عايز أطلب صنايعي وأتابع الخدمة',
                 icon: Icons.home_rounded,
-                color: AppColors.powderBlue,
                 onTap: () => _selectCustomer(context),
               ),
               const SizedBox(height: 14),
@@ -66,7 +65,6 @@ class RoleSelectionScreen extends StatelessWidget {
                 title: 'أنا صنايعي',
                 subtitle: 'دخول برقم الموبايل وكلمة المرور أو طلب انضمام',
                 icon: Icons.handyman_rounded,
-                color: AppColors.powderPeach,
                 onTap: () => _selectProvider(context),
               ),
               const Spacer(flex: 2),
@@ -98,26 +96,24 @@ class _RoleCard extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.icon,
-    required this.color,
     required this.onTap,
   });
 
   final String title;
   final String subtitle;
   final IconData icon;
-  final Color color;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(18),
       child: Ink(
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(24),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
           border: Border.all(color: AppColors.border),
         ),
         child: Row(
@@ -125,11 +121,11 @@ class _RoleCard extends StatelessWidget {
             Container(
               width: 66,
               height: 66,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                shape: BoxShape.circle,
+              decoration: BoxDecoration(
+                color: AppColors.primarySoft,
+                borderRadius: BorderRadius.circular(18),
               ),
-              child: Icon(icon, color: AppColors.navy, size: 34),
+              child: Icon(icon, color: AppColors.primary, size: 32),
             ),
             const SizedBox(width: 15),
             Expanded(
@@ -139,7 +135,7 @@ class _RoleCard extends StatelessWidget {
                   Text(
                     title,
                     style: const TextStyle(
-                      color: AppColors.navy,
+                      color: AppColors.text,
                       fontSize: 18,
                       fontWeight: FontWeight.w700,
                     ),
@@ -155,7 +151,11 @@ class _RoleCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+            const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: AppColors.primary,
+              size: 18,
+            ),
           ],
         ),
       ),

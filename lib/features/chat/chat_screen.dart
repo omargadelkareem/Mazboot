@@ -226,7 +226,7 @@ class _ChatViewState extends State<_ChatView> {
                     SizedBox(width: 7),
                     Expanded(
                       child: Text(
-                        'المحادثة مرتبطة بالطلب ومحفوظة داخل Mazboot',
+                        'المحادثة مرتبطة بالطلب ومحفوظة داخل مظبوط',
                         style: TextStyle(
                           fontSize: 9,
                           color: AppColors.textMuted,

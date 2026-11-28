@@ -9,7 +9,7 @@ class PrimaryButton extends StatelessWidget {
     required this.onPressed,
     this.icon,
     this.isLoading = false,
-    this.backgroundColor = AppColors.orange,
+    this.backgroundColor = AppColors.primary,
     this.foregroundColor = Colors.white,
     this.height = 56,
   });
@@ -34,7 +34,7 @@ class PrimaryButton extends StatelessWidget {
           foregroundColor: foregroundColor,
           disabledBackgroundColor: backgroundColor.withOpacity(0.55),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(15),
           ),
         ),
         child: isLoading

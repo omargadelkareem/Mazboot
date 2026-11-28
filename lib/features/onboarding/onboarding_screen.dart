@@ -26,7 +26,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           'اطلب أفضل الفنيين في الكهرباء والسباكة والنجارة والتنظيف والمزيد.',
       mainIcon: Icons.home_work_rounded,
       accentIcon: Icons.location_on_rounded,
-      color: AppColors.powderBlue,
     ),
     _OnboardingItem(
       title: 'فنيين موثّقين وتقييمات حقيقية',
@@ -34,7 +33,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           'شاهد خبرة الفني وأعماله السابقة وتقييمات العملاء قبل إرسال الطلب.',
       mainIcon: Icons.verified_user_rounded,
       accentIcon: Icons.star_rounded,
-      color: AppColors.powderGreen,
     ),
     _OnboardingItem(
       title: 'تابع طلبك خطوة بخطوة',
@@ -42,7 +40,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           'من قبول الفني للطلب وحتى وصوله وإتمام الخدمة، ستعرف كل التفاصيل.',
       mainIcon: Icons.route_rounded,
       accentIcon: Icons.handyman_rounded,
-      color: AppColors.powderPeach,
     ),
   ];
 
@@ -126,7 +123,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
               const SizedBox(height: 24),
               PrimaryButton(
-                label: _index == _pages.length - 1 ? 'ابدأ مع Mazboot' : 'التالي',
+                label: _index == _pages.length - 1 ? 'ابدأ مع مظبوط' : 'التالي',
                 icon: Icons.arrow_back_rounded,
                 onPressed: _continue,
               ),
@@ -149,40 +146,85 @@ class _OnboardingPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: 260,
-          height: 260,
-          decoration: BoxDecoration(color: item.color, shape: BoxShape.circle),
+          width: double.infinity,
+          height: 300,
+          decoration: BoxDecoration(
+            color: AppColors.primarySoft,
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(color: AppColors.border),
+          ),
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Icon(item.mainIcon, size: 116, color: AppColors.navy),
-              Positioned(
-                left: 34,
-                top: 42,
+              PositionedDirectional(
+                top: -54,
+                end: -45,
                 child: Container(
-                  width: 64,
-                  height: 64,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                  width: 180,
+                  height: 180,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.52),
                     shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    item.accentIcon,
-                    color: AppColors.orange,
-                    size: 34,
                   ),
                 ),
               ),
+              Container(
+                width: 132,
+                height: 132,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(34),
+                  boxShadow: <BoxShadow>[
+                    BoxShadow(
+                      color: AppColors.ink.withOpacity(0.07),
+                      blurRadius: 24,
+                      offset: const Offset(0, 10),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  item.mainIcon,
+                  size: 67,
+                  color: AppColors.primaryDark,
+                ),
+              ),
               Positioned(
-                right: 25,
-                bottom: 48,
+                left: 42,
+                top: 48,
                 child: Container(
-                  width: 32,
-                  height: 8,
+                  width: 58,
+                  height: 58,
                   decoration: BoxDecoration(
-                    color: AppColors.orange,
-                    borderRadius: BorderRadius.circular(10),
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(18),
                   ),
+                  child: Icon(
+                    item.accentIcon,
+                    color: Colors.white,
+                    size: 29,
+                  ),
+                ),
+              ),
+              const PositionedDirectional(
+                start: 24,
+                bottom: 24,
+                child: Row(
+                  children: <Widget>[
+                    Icon(
+                      Icons.verified_rounded,
+                      color: AppColors.primary,
+                      size: 18,
+                    ),
+                    SizedBox(width: 5),
+                    Text(
+                      'خدمة موثوقة',
+                      style: TextStyle(
+                        color: AppColors.primaryDark,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -213,12 +255,10 @@ class _OnboardingItem {
     required this.description,
     required this.mainIcon,
     required this.accentIcon,
-    required this.color,
   });
 
   final String title;
   final String description;
   final IconData mainIcon;
   final IconData accentIcon;
-  final Color color;
 }

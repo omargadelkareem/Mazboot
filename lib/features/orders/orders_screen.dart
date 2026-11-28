@@ -363,7 +363,7 @@ class _OrderCard extends StatelessWidget {
     );
     if (result == null || !context.mounted) return;
     final customerName =
-        context.read<ProfileCubit>().state.profile?.name ?? 'عميل Mazboot';
+        context.read<ProfileCubit>().state.profile?.name ?? 'عميل مظبوط';
     final success = await context.read<OrdersCubit>().review(
       order: order,
       customerName: customerName,

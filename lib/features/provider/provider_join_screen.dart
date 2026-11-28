@@ -160,7 +160,7 @@ class _ProviderJoinScreenState extends State<ProviderJoinScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Text(
-                            'ابدأ شغلك مع Mazboot',
+                            'ابدأ شغلك مع مظبوط',
                             style: TextStyle(
                               fontSize: 17,
                               fontWeight: FontWeight.w700,

@@ -194,7 +194,7 @@ class ProviderOrderDetailsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'عميل Mazboot • ${_customerReference(order.customerId)}',
+                          'عميل مظبوط • ${_customerReference(order.customerId)}',
                           style: const TextStyle(fontWeight: FontWeight.w700),
                         ),
                         const Text(

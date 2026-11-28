@@ -208,7 +208,7 @@ class AuthCubit extends Cubit<AuthState> {
     await repository.saveProfile(
       CustomerProfile(
         uid: repository.currentUid,
-        name: googleName.length >= 2 ? googleName : 'عميل Mazboot',
+        name: googleName.length >= 2 ? googleName : 'عميل مظبوط',
         phone: phone,
         email: identity?.email ?? '',
         avatarUrl: identity?.photoUrl,

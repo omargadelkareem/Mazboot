@@ -73,18 +73,17 @@ class _ProviderBottomNav extends StatelessWidget {
   Widget build(BuildContext context) {
     final workspace = context.watch<ProviderWorkspaceCubit>().state;
     return SafeArea(
-      minimum: const EdgeInsets.fromLTRB(14, 0, 14, 10),
       child: Container(
-        height: 68,
-        padding: const EdgeInsets.all(7),
+        height: 72,
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 7),
         decoration: BoxDecoration(
-          color: AppColors.navy,
-          borderRadius: BorderRadius.circular(28),
+          color: Colors.white,
+          border: const Border(top: BorderSide(color: AppColors.border)),
           boxShadow: <BoxShadow>[
             BoxShadow(
-              color: AppColors.navy.withOpacity(0.2),
-              blurRadius: 25,
-              offset: const Offset(0, 10),
+              color: AppColors.ink.withOpacity(0.06),
+              blurRadius: 18,
+              offset: const Offset(0, -4),
             ),
           ],
         ),
@@ -95,15 +94,12 @@ class _ProviderBottomNav extends StatelessWidget {
             return Expanded(
               child: InkWell(
                 onTap: () => onChanged(itemIndex),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(14),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 220),
-                  padding: const EdgeInsets.symmetric(vertical: 9),
-                  decoration: BoxDecoration(
-                    color: selected ? AppColors.orange : Colors.transparent,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  decoration: const BoxDecoration(),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Stack(
@@ -112,7 +108,9 @@ class _ProviderBottomNav extends StatelessWidget {
                           Icon(
                             item.icon,
                             size: 21,
-                            color: selected ? Colors.white : Colors.white70,
+                            color: selected
+                                ? AppColors.primary
+                                : AppColors.textMuted,
                           ),
                           if ((itemIndex == 1 &&
                                   workspace.incoming.isNotEmpty) ||
@@ -124,14 +122,10 @@ class _ProviderBottomNav extends StatelessWidget {
                                 width: 9,
                                 height: 9,
                                 decoration: BoxDecoration(
-                                  color: selected
-                                      ? Colors.white
-                                      : AppColors.orange,
+                                  color: AppColors.primary,
                                   shape: BoxShape.circle,
                                   border: Border.all(
-                                    color: selected
-                                        ? AppColors.orange
-                                        : AppColors.navy,
+                                    color: Colors.white,
                                     width: 1.2,
                                   ),
                                 ),
@@ -139,21 +133,21 @@ class _ProviderBottomNav extends StatelessWidget {
                             ),
                         ],
                       ),
-                      if (selected) ...<Widget>[
-                        const SizedBox(width: 5),
-                        Flexible(
-                          child: Text(
-                            item.label,
-                            overflow: TextOverflow.fade,
-                            softWrap: false,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
+                      const SizedBox(height: 3),
+                      Text(
+                        item.label,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: TextStyle(
+                          color: selected
+                              ? AppColors.primaryDark
+                              : AppColors.textMuted,
+                          fontSize: 10,
+                          fontWeight: selected
+                              ? FontWeight.w700
+                              : FontWeight.w500,
                         ),
-                      ],
+                      ),
                     ],
                   ),
                 ),

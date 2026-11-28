@@ -132,11 +132,11 @@ class AuthService {
         uid: 'demo-google-customer',
         role: AppAccountRole.customer,
       );
-      await _box.write('customer_name', 'عميل Mazboot');
+      await _box.write('customer_name', 'عميل مظبوط');
       await _box.write('customer_email', 'demo@mazboot.app');
       return const AuthIdentity(
         uid: 'demo-google-customer',
-        name: 'عميل Mazboot',
+        name: 'عميل مظبوط',
         email: 'demo@mazboot.app',
       );
     }
@@ -164,7 +164,7 @@ class AuthService {
     await _box.write('selected_role', 'customer');
     return AuthIdentity(
       uid: user.uid,
-      name: user.displayName ?? googleUser.displayName ?? 'عميل Mazboot',
+      name: user.displayName ?? googleUser.displayName ?? 'عميل مظبوط',
       email: user.email ?? googleUser.email,
       phone: user.phoneNumber ?? '',
       photoUrl: user.photoURL ?? googleUser.photoUrl,
@@ -233,11 +233,11 @@ class AuthService {
         role: AppAccountRole.provider,
       );
       await _box.write('provider_phone', normalizedPhone);
-      await _box.write('provider_name', 'صنايعي Mazboot');
+      await _box.write('provider_name', 'صنايعي مظبوط');
       await _box.write('selected_role', 'provider');
       return AuthIdentity(
         uid: 'demo-provider',
-        name: 'صنايعي Mazboot',
+        name: 'صنايعي مظبوط',
         email: providerEmailForPhone(normalizedPhone),
         phone: normalizedPhone,
       );
@@ -255,11 +255,11 @@ class AuthService {
     }
     await _saveProviderSession(
       phone: normalizedPhone,
-      name: user.displayName ?? 'صنايعي Mazboot',
+      name: user.displayName ?? 'صنايعي مظبوط',
     );
     return AuthIdentity(
       uid: user.uid,
-      name: user.displayName ?? 'صنايعي Mazboot',
+      name: user.displayName ?? 'صنايعي مظبوط',
       email: user.email ?? providerEmailForPhone(normalizedPhone),
       phone: normalizedPhone,
     );

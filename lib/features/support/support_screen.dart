@@ -171,7 +171,7 @@ class SupportScreen extends StatelessWidget {
         : Uri(
             scheme: 'mailto',
             path: value,
-            queryParameters: <String, String>{'subject': 'دعم Mazboot'},
+            queryParameters: <String, String>{'subject': 'دعم مظبوط'},
           );
     final opened = await launchUrl(uri);
     if (!opened && context.mounted)

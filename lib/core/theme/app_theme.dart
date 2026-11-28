@@ -5,10 +5,10 @@ import 'app_colors.dart';
 abstract final class AppTheme {
   static ThemeData get light {
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: AppColors.navy,
+      seedColor: AppColors.primary,
       brightness: Brightness.light,
-      primary: AppColors.navy,
-      secondary: AppColors.orange,
+      primary: AppColors.primary,
+      secondary: AppColors.primaryDark,
       surface: AppColors.surface,
       error: AppColors.danger,
     );
@@ -18,9 +18,9 @@ abstract final class AppTheme {
       fontFamily: 'Tajawal',
       colorScheme: colorScheme,
       scaffoldBackgroundColor: AppColors.background,
-      splashFactory: InkSparkle.splashFactory,
+      splashFactory: InkRipple.splashFactory,
       appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.surface,
         foregroundColor: AppColors.text,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
@@ -29,7 +29,7 @@ abstract final class AppTheme {
           color: AppColors.text,
           fontFamily: 'Tajawal',
           fontWeight: FontWeight.w700,
-          fontSize: 18,
+          fontSize: 19,
         ),
       ),
       textTheme: const TextTheme(
@@ -78,17 +78,53 @@ abstract final class AppTheme {
         ),
         hintStyle: const TextStyle(color: AppColors.textMuted, fontSize: 13),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(15),
           borderSide: const BorderSide(color: AppColors.border),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.navy, width: 1.4),
+          borderRadius: BorderRadius.circular(15),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.4),
         ),
         errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(15),
           borderSide: const BorderSide(color: AppColors.danger),
         ),
+      ),
+      cardTheme: CardTheme(
+        color: AppColors.surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+          side: const BorderSide(color: AppColors.border),
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          textStyle: const TextStyle(
+            fontFamily: 'Tajawal',
+            fontWeight: FontWeight.w700,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.primaryDark,
+          textStyle: const TextStyle(
+            fontFamily: 'Tajawal',
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+      progressIndicatorTheme: const ProgressIndicatorThemeData(
+        color: AppColors.primary,
       ),
       dividerTheme: const DividerThemeData(
         color: AppColors.border,
