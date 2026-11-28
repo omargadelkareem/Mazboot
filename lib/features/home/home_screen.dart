@@ -325,7 +325,7 @@ class _ServicesGrid extends StatelessWidget {
         crossAxisCount: 4,
         crossAxisSpacing: 10,
         mainAxisSpacing: 12,
-        childAspectRatio: 0.70,
+        mainAxisExtent: 116,
       ),
       itemBuilder: (_, index) {
         final category = categories[index];
@@ -362,17 +362,19 @@ class _ServiceCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               CategoryImage(category: category, size: 54),
-              const SizedBox(height: 8),
-              Text(
-                category.name,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppColors.text,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  height: 1.25,
+              const SizedBox(height: 6),
+              Flexible(
+                child: Text(
+                  category.name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: AppColors.text,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    height: 1.25,
+                  ),
                 ),
               ),
             ],
